@@ -1,37 +1,19 @@
 
 
-
--------AWHONN Neonatal Orientation and Education Program (NOEP)-------
-
-Drop table if exists #t1
-Drop table if exists #t2
-
-
-Declare 
-@Query_Start_Date DATE,
-@Query_End_Date DATE,
-@Exclude_Priors DATE,
-@AO_Key int,
-@PriorYearStart DATE,
-@PriorYearEnd Date,
-@PriorPurchases int
-
----------UPDATE THE 4 FIELDS BELOW---------------------------------------------------------------------
-set @AO_Key =  --update with AO Key
-set @Query_Start_Date =  --update with your query start date
-set @Query_End_Date = --update with your query end date
-set @PriorPurchases = 1 --IF Prior Purchases type 1, if no Prior Purchases type 0
+Declare @PriorPurchases INT = 0 --IF Prior Purchases type 1, if no Prior Purchases type 0
 --------------------------------------------------------------------------------------------------------
+
+Declare @PriorYearStart DATE = dateadd(year, -1, @Query_Start_Date)
+Declare @PriorYearEnd DATE = dateadd(day, -1, @Query_Start_Date)
+
 
 If @PriorPurchases = 1
 Begin
 
-set @PriorYearStart = dateadd(year, -1, @Query_Start_Date)
-set @PriorYearEnd = dateadd(day, -1, @Query_Start_Date)
+
 
 DROP TABLE IF EXISTS #t1
-DROP TABLE IF EXISTS #t2
-DROP TABLE IF EXISTS #t3
+
 
 select distinct
 ci.enrollment_datetime,
@@ -80,28 +62,22 @@ ci.enrollment_datetime
 
 -------------------------
 select distinct
-
-us.user_student_id,
-inst.org_node_id as Institution_ID,
-inst.org_node_name as Institution,
-dept.org_node_code as Dept_ID,
-dept.org_node_name as Department,
-inst.org_node_type_id,
-u.last_name,
-u.first_name,
-u.system_identifier,
 u.username,
-ci.course_instance_id,
+ci.enrollment_datetime,
+ci.completion_datetime,
 ci.course_name_at_time_of_enrollment,
+o.external_org_id as AO_Key,
+o.org_name,
+inst.org_node_name as Institution,
+dept.org_node_name as Department,
 ci.course_id,
 ci.course_instance_id,
 ci.course_instance_interaction_mode_id,
 ci.estimated_completion_seconds,
 cis.description as course_instance_status,
-ci.enrollment_datetime,
-ci.completion_datetime,
-ci.is_deleted,
-ci.unenrollment_reason_type_id
+us.user_student_id,
+inst.org_node_id as Institution_ID,
+dept.org_node_code as Dept_ID
 
 from
 dbo.org o with (nolock)
@@ -139,26 +115,21 @@ and cccm.course_category_id =  'F7C94142-A78D-EB11-80DF-005056B1202E'
 
 group by 
 u.username,
-us.user_student_id,
-inst.org_node_id,
-inst.org_node_name,
-dept.org_node_code,
-dept.org_node_name,
-inst.org_node_type_id,
-u.last_name,
-u.first_name,
-u.system_identifier,
-ci.course_instance_id,
+ci.enrollment_datetime,
+ci.completion_datetime,
 ci.course_name_at_time_of_enrollment,
+o.external_org_id,
+o.org_name,
+inst.org_node_name,
+dept.org_node_name,
 ci.course_id,
 ci.course_instance_id,
 ci.course_instance_interaction_mode_id,
 ci.estimated_completion_seconds,
-cis.[description],
-ci.enrollment_datetime,
-ci.completion_datetime,
-ci.is_deleted,
-ci.unenrollment_reason_type_id
+cis.description,
+us.user_student_id,
+inst.org_node_id,
+dept.org_node_code
 
 
 
@@ -177,35 +148,27 @@ BEGIN
 
 select distinct
 ----------------------------------------------------------------------
-us.user_student_id,
-on5.org_node_name as on5,
-on4.org_node_name as on4,
-on3.org_node_name as on3,
-inst.org_node_id as Institution_ID,
-inst.org_node_name as Institution,
-dept.org_node_code as Dept_ID,
-dept.org_node_name as Department,
-inst.org_node_type_id,
-----------------------------------------------------------------------
-
-
-
-
-u.last_name,
-u.first_name,
-u.system_identifier,
 u.username,
-ci.course_instance_id,
+ci.enrollment_datetime,
+ci.completion_datetime,
 ci.course_name_at_time_of_enrollment,
+o.external_org_id as AO_Key,
+o.org_name,
+inst.org_node_name as Institution,
+dept.org_node_name as Department,
 ci.course_id,
 ci.course_instance_id,
 ci.course_instance_interaction_mode_id,
 ci.estimated_completion_seconds,
 cis.description as course_instance_status,
-ci.enrollment_datetime,
-ci.completion_datetime,
-ci.is_deleted,
-ci.unenrollment_reason_type_id
+us.user_student_id,
+inst.org_node_id as Institution_ID,
+dept.org_node_code as Dept_ID
+----------------------------------------------------------------------
+
+
+
+
 
 
 
@@ -237,14 +200,7 @@ on us.org_node_id = dept.org_node_id and dept.is_deleted = 0
 inner join dbo.org_node inst with (nolock)
 on dept.parent_org_node_id = inst.org_node_id and inst.is_deleted = 0
 
-inner join dbo.org_node on3 with (nolock)
-on inst.parent_org_node_id = on3.org_node_id
 
-inner join dbo.org_node on4 with (nolock)
-on on3.parent_org_node_id = on4.org_node_id
-
-inner join dbo.org_node on5 with (nolock)
-on on4.parent_org_node_id = on5.org_node_id
 ----------------------------------------------------------------------
 
 where
@@ -258,3 +214,4 @@ and o.external_org_id = @AO_Key
 and ci.course_instance_interaction_mode_id not in ('1','6','7') 
 and cccm.course_category_id =  'F7C94142-A78D-EB11-80DF-005056B1202E'
 END
+
