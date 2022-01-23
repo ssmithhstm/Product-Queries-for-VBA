@@ -1,6 +1,4 @@
 
-Declare @PriorPurchases INT = 
---------------------------------------------------------------------------------------------------------
 
 Declare @PriorYearStart DATE = dateadd(year, -1, @Query_Start_Date)
 Declare @PriorYearEnd DATE = dateadd(day, -1, @Query_Start_Date)
