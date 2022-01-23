@@ -1,20 +1,5 @@
 
 
--------Checklist Management-------
-
-declare	
-	@AO_Key int
-	,@Query_start_date datetime
-	,@Query_end_date datetime
-
-
-
-------------Update 3 fields below------------------------
-	set @AO_Key = 
-	set @Query_start_date =  --Insert Start Date
-	set @query_end_date =  --Insert End Date
------------------------------------------------------------		
-
 
 	SELECT DISTINCT
 		onode_parent.org_node_code as Institution_Code, 
