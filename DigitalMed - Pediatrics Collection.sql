@@ -1,48 +1,4 @@
 
-
--------DigitalMed - Pediatrics Collection-------
-
-Declare
-@Query_Start_Date DATE,
-@Query_End_Date DATE,
-@AO_Key int
-
-
----------Update the 3 rows below to your query parameters----------------------------------
-
-set @AO_Key =  --update with AO Key
-set @Query_Start_Date =  --update with your query start date
-set @Query_End_Date = --update with your query end date
----------------------------------------------------------------
-
-
-
-select distinct
-
-ci.enrollment_datetime,
-ci.course_name_at_time_of_enrollment,
-u.username,
-u.last_name,
-u.first_name,
-o.org_name,
-inst.org_node_name as Institution,
-dept.org_node_name as Department,
-ci.course_instance_id,
-ci.course_id,
-ci.course_instance_interaction_mode_id,
-ci.estimated_completion_seconds,
-cis.description as course_instance_status,
-ci.completion_datetime,
-ci.is_deleted,
-ci.unenrollment_reason_type_id,
-
-o.external_org_id as AO_Key,
-us.user_student_id,
-inst.org_node_id as Institution_ID,
-dept.org_node_code as Dept_ID,
-inst.org_node_type_id
-----------------------------------------------
-from
 Select Distinct
 
 u.username,
