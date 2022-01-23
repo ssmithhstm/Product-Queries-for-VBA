@@ -1,24 +1,8 @@
 
 
--------AORN Perioperative Annual Competency Assessment-------
 
-Declare 
-@Query_Start_Date DATE,
-@Query_End_Date DATE,
-@Exclude_Priors DATE,
-@AO_Key int,
-@PriorYearStart DATE,
-@PriorYearEnd Date
-
----------UPDATE THE 3 FIELDS BELOW------------------
-set @AO_Key =  --update with AO Key
-set @Query_Start_Date =  --update with your query start date
-set @Query_End_Date = --update with your query end date
---------------------------
-
-
-set @PriorYearStart = dateadd(year, -1, @Query_Start_Date)
-set @PriorYearEnd = dateadd(day, -1, @Query_Start_Date)
+Declare @PriorYearStart DATE = dateadd(year, -1, @Query_Start_Date)
+Declare @PriorYearEnd DATE = dateadd(day, -1, @Query_Start_Date)
 
 DROP TABLE IF EXISTS #t1
 DROP TABLE IF EXISTS #t2
